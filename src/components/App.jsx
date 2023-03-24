@@ -1,56 +1,59 @@
 import { Container } from './container/container.styled';
-import { Component } from 'react';
+import { Component, useEffect, useState } from 'react';
 import { Statistics } from './feedbackControls/Statistics';
 import { FeedbackOptions } from './feedbackControls/FeedbackOptions/FeedbackOptions';
 
-export class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  };
+export const App = () => {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [percentage, setPrecentage] = useState(0);
 
-  onFeedbackClick = ({ target }) => {
-    this.setState(prevState => {
-      return { [target.name]: prevState[target.name] + 1 };
-    });
-  };
+  const onFeedbackClick = ({ target: { name } }) => {
+    console.log({ name }, name);
+    switch (name) {
+      case 'good':
+        setGood(good + 1);
+        break;
 
-  totalFeedbacks = state => {
-    return Object.values(state).reduce((previousValue, number) => {
-      return previousValue + number;
-    }, 0);
-  };
-  positivePercentage = state => {
-    if (this.totalFeedbacks(this.state) !== 0) {
-      return (
-        Math.round((state.good / this.totalFeedbacks(this.state)) * 100) + '%'
-      );
+      case 'neutral':
+        setNeutral(neutral + 1);
+        break;
+
+      case 'bad':
+        setBad(bad + 1);
+        break;
+
+      default:
+        return;
     }
-    return 0;
+
+    console.log(good, bad, neutral);
   };
 
-  render() {
-    return (
-      <Container>
-        <div title="Please, leave a feedback">
-          <h1>Please, leave a feedback</h1>
-          <FeedbackOptions
-            options={this.state}
-            onLeaveFeedback={this.onFeedbackClick}
-          ></FeedbackOptions>
-        </div>
-        <div title="Statistics">  
-          <h2>Statistisc</h2>
-          <Statistics
-            good={this.state.good}
-            neutral={this.state.neutral}
-            bad={this.state.bad}
-            total={this.totalFeedbacks(this.state)}
-            positivePercentage={this.positivePercentage(this.state)}
-          ></Statistics>
-        </div>
-      </Container>
-    );
-  }
-}
+  useEffect(() => {
+    setTotal(good + neutral + bad);
+
+    good > 0 ? setPrecentage(Math.round((good / (good + neutral + bad)) * 100) + '%') : setPrecentage(0)
+  }, [good, neutral, bad]);
+
+  return (
+    <Container>
+      <div title="Please, leave a feedback">
+        <h1>Please, leave a feedback</h1>
+        <FeedbackOptions onLeaveFeedback={onFeedbackClick}></FeedbackOptions>
+      </div>
+      <div title="Statistics">
+        <h2>Statistisc</h2>
+        <Statistics
+          good={good}
+          neutral={neutral}
+          bad={bad}
+          total={total}
+          positivePercentage={percentage}
+        ></Statistics>
+      </div>
+    </Container>
+  );
+};
