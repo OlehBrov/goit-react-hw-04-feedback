@@ -34,8 +34,7 @@ export const App = () => {
 
   useEffect(() => {
     setTotal(good + neutral + bad);
-
-    good > 0 ? setPrecentage(Math.round((good / (good + neutral + bad)) * 100) + '%') : setPrecentage(0)
+     good > 0 ? setPrecentage(Math.round((good / (good + neutral + bad)) * 100) + '%') : setPrecentage(0)
   }, [good, neutral, bad]);
 
   return (
