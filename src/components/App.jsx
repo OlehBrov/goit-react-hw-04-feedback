@@ -1,5 +1,5 @@
 import { Container } from './container/container.styled';
-import { Component, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Statistics } from './feedbackControls/Statistics';
 import { FeedbackOptions } from './feedbackControls/FeedbackOptions/FeedbackOptions';
 
